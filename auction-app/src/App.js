@@ -1,8 +1,9 @@
 import './App.css';
+import RoutesComponent from './RoutesComponent';
 
 function App() {
   return (
-    <h1>Hello</h1>
+    <RoutesComponent />
   );
 }
 
