@@ -14,11 +14,12 @@ contract AuctionFactory {
         address _seller,
         uint _initialBid,
         string memory _productName,
+        uint _startTime,
         uint _endTime,
         string memory _imageData
     ) public {
         // Deploy a new instance of the Auction contract and store it in the array
-        deployedAuctions.push(new Auction(_seller, _initialBid, _endTime, _productName, _imageData));
+        deployedAuctions.push(new Auction(_seller, _initialBid, _startTime, _endTime, _productName, _imageData));
     }
 
 
@@ -34,7 +35,7 @@ contract AuctionFactory {
             Auction auction = deployedAuctions[i];
 
             // Check if the user has participated in the current auction
-            if (auction.addrBid(_user)) {
+            if (auction.addrHasBid(_user)) {
                 size += 1;
             }
         }
@@ -47,7 +48,7 @@ contract AuctionFactory {
         for (uint i = 0; i < deployedAuctions.length; i++) {
             Auction auction = deployedAuctions[i];
 
-            if (auction.addrBid(_user)) {
+            if (auction.addrHasBid(_user)) {
                 userHistory[j] = auction;
                 j += 1;
             }

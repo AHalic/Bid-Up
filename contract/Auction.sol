@@ -5,22 +5,24 @@ pragma solidity ^0.8.0;
 // Define the Auction contract
 contract Auction {
     // Store the current highest bid and bidder
-    uint public highestBid;
+    uint256 public highestBid;
     address public highestBidder;
     // Stores all address who made a bid
     address[] public bidders;
     // Store the address of the seller and the start and end times of the auction
     address public seller;
     uint public endTime;
+    uint public startTime;
     // Store the name of the product being auctioned
     string public productName;
     // Store the image data as a base64-encoded string
     string public imageData;
     bool public close = false;
 
-    constructor (address _seller, uint _initialBid, uint _endTime, string memory _productName, string memory _imageData) {
+    constructor (address _seller, uint _initialBid, uint _startTime, uint _endTime, string memory _productName, string memory _imageData) {
         highestBid = _initialBid;
         seller = _seller;
+        startTime = _startTime;
         endTime = _endTime;
         productName = _productName;
         imageData = _imageData;
@@ -31,17 +33,17 @@ contract Auction {
     // Define an event for when the auction is closed
     event AuctionClosed(uint finalBid, address winner);
 
-    modifier bidAutorize (uint value) {
+    modifier bidAutorize (uint256 value) {
         // Check that the value of the new bid is higher than the current highest bid
         require(value > highestBid);
 
         // Check that the auction is still open
-        require(block.timestamp < endTime);
+        require(!close);
         _;
     }
 
     // Define a function to place a new bid
-    function bid(uint value) public bidAutorize (value) {
+    function bid(uint256 value) public bidAutorize (value) {
         // Update the highest bid and bidder
         highestBid = value;
         highestBidder = msg.sender;
@@ -51,23 +53,35 @@ contract Auction {
         emit NewBid(msg.sender, value);
     }
 
-    modifier closeAutorize {
+    modifier closeAutorize(uint dateNow) {
         // Check that the caller is the seller
         require(msg.sender == seller);
+        require(dateNow >= endTime);
+        _;
+    }
+
+    modifier closed() {
+        // Check that the auction is closed
+        require(close);
         _;
     }
 
     // Define a function to close the auction and finalize the results
-    function closeAuction() public closeAutorize {
-        // Transfer the winning bid to the seller
-        payable(seller).transfer(highestBid);
+    function closeAuction(uint dateNow) public closeAutorize(dateNow) {
         // Trigger the AuctionClosed event
         emit AuctionClosed(highestBid, highestBidder);
 
         close = true;
     }
 
-    function addrBid(address adr) public view returns (bool) {
+    function pay() public closed {
+        // Transfer the winning bid to the seller
+        (bool success,) = seller.call{value: highestBid}("");
+        require(success, "Failed to send money");
+    }
+
+    // Define a function that checks if a specific address has bid
+    function addrHasBid(address adr) public view returns (bool) {
         for (uint i = 0; i < bidders.length; i++) {
             if (bidders[i] == adr) {
                 return true;
