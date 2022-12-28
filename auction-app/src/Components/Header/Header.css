@@ -56,6 +56,11 @@ input::placeholder {
 }
 
 .searchIcon, .loginIcon {
+    display: flex;
+    padding: 0;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
     color: #F3F8FF;
 }
 
@@ -78,7 +83,11 @@ input::placeholder {
     color: #F3F8FF;
     font-size: 14px;
     font-family: 'Roboto', sans-serif;
-    margin: 0 10px;
+    margin: 0 11px;
+}
+
+.profileBtnText {
+    margin: 0 5px;
 }
 
 .profileBtnIcon {

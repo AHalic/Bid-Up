@@ -61,7 +61,7 @@ export default function Header({boolSearch, searchQuery, setSearchQuery}) {
             {!auctFactory?
                 <button className="login" onClick={connectHandler}>
                     <span>
-                        <CiLogin className="loginIcon" size={30}/>
+                        <CiLogin className="loginIcon" size={25}/>
                     </span>
                     <p className="loginText">LOGIN</p>
                 </button>
