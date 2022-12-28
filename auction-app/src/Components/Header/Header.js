@@ -4,17 +4,23 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
+import { ethers } from "ethers";
+
+import { loginMetaMask } from '../../Services/metamask'
 
 import "./Header.css";
 import logo from "../../Assets/Logo.svg";
 import { RxMagnifyingGlass } from "react-icons/rx";
+import { IoMdArrowDropdown } from "react-icons/io"
 import { CiLogin } from "react-icons/ci";
 
 export default function Header({boolSearch, searchQuery, setSearchQuery}) {
     const [search, setSearch] = useState("");
+    const [auctFactory, setAuctFactory] = useState("");
 
     const navigate = useNavigate()
-    
+
+    // Search bar functions
     const onSubmit = e => {
         setSearchQuery(search)
         e.preventDefault()
@@ -23,6 +29,16 @@ export default function Header({boolSearch, searchQuery, setSearchQuery}) {
     const handleSearchQueryChange = e => {
         setSearch(e.target.value)
     };
+
+    const connectHandler = async () => {
+        try {
+            await loginMetaMask(setAuctFactory)
+        } catch (error) {
+            console.log('Something went wront: ', error);
+        }
+
+    };
+    
 
     return (
         <div className="header">
@@ -42,12 +58,23 @@ export default function Header({boolSearch, searchQuery, setSearchQuery}) {
             : null}
 
             {/* Login button if not logged */}
-            <div className="login">
-                <span>
-                    <CiLogin className="loginIcon" size={30}/>
-                </span>
-                <p className="loginText">LOGIN</p>
-            </div>
+            {!auctFactory?
+                <button className="login" onClick={connectHandler}>
+                    <span>
+                        <CiLogin className="loginIcon" size={30}/>
+                    </span>
+                    <p className="loginText">LOGIN</p>
+                </button>
+            :
+                <button className="profileBtn">
+                    <p className="profileBtnText">
+                        PROFILE
+                    </p>
+                    <span>
+                        <IoMdArrowDropdown className="profileBtnIcon" size={20}/>
+                    </span>
+                </button>
+            }
         </div>
     );
 }
