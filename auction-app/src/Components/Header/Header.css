@@ -59,16 +59,33 @@ input::placeholder {
     color: #F3F8FF;
 }
 
-.login {
+.login, .profileBtn {
     display: flex;
     padding: 0;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border-width: 0px;
+    outline: none;
 }
 
-.loginText {
+.login:hover, .profileBtn:hover {
+    cursor: pointer;
+}
+
+.loginText, .profileBtnText {
     color: #F3F8FF;
     font-size: 14px;
     font-family: 'Roboto', sans-serif;
     margin: 0 10px;
+}
+
+.profileBtnIcon {
+    display: flex;
+    padding: 0;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    color: #A6E3E9;
 }
