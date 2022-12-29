@@ -1,0 +1,39 @@
+.homeOuter {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.homeContent {
+    display: flex;
+    height: 100%;
+    margin: 40px;
+    background-color: #EEF5FF;
+    border-radius: 4px;
+    padding: 40px;
+}
+
+.innerContent {
+    width: 100%;
+    height: 100%;
+}
+
+.titleHome {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 50px;
+    height: fit-content;
+    color: #525E75;
+    font-size: 34px;
+    font-weight: 700;
+    font-family: 'Roboto', sans-serif;
+}
+
+.textNoAuct {
+    font-family: 'Roboto', sans-serif;
+    color: #71819E;
+    font-size: 20px;
+    margin: 0;
+    margin-left: 20px;
+    font-weight: 400;
+}
