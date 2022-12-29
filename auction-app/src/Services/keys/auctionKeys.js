@@ -1,5 +1,5 @@
 const auction = {
-    "abi": [
+    'abi': [
         {
             "inputs": [
                 {
@@ -263,7 +263,6 @@ const auction = {
             "type": "function"
         }
     ],
-    "address": '0x183ABdaF48b80702C6f2c181552B40d2B37B56FE'
 }
 
 export default auction
