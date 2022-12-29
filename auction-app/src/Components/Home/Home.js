@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import './Home.css';
 import Header from "./../Header/Header";
+import Card from "../Card/Card";
 
-export default function Home() {
-    const [data, setData] = useState("")
-
+export default function Home({data, setData, signer, setSigner, auctFactory, setAuctFactory}) {
+    
     return (
         <div className="homeOuter">
-            <Header boolSearch={true} data={data} setData={setData}/>
+            <Header boolSearch={true} setData={setData} signer={signer} setSigner={setSigner} 
+                auctFactory={auctFactory} setAuctFactory={setAuctFactory} />
             {/* <div> */}
                 <div className="homeContent">
                     {data ? 
@@ -17,7 +18,7 @@ export default function Home() {
                             <p className="titleHome">OPEN AUCTIONS</p>
                             {data.length > 0 ? 
                                 data.map(auct => {
-
+                                    <Card auctionAddress={auct}/>
                                 }) 
                             :
                                 <p className="textNoAuct">No Auctions avaible</p>

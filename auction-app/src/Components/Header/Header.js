@@ -15,10 +15,8 @@ import { RxLightningBolt, RxMagnifyingGlass } from "react-icons/rx";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { CiLogin } from "react-icons/ci";
 
-export default function Header({boolSearch, data, setData}) {
+export default function Header({boolSearch, setData, signer, setSigner, auctFactory, setAuctFactory}) {
     const [search, setSearch] = useState("");
-    const [signer, setSigner] = useState("");
-    const [auctFactory, setAuctFactory] = useState("");
 
     const navigate = useNavigate()
 
