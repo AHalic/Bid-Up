@@ -4,14 +4,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from "./../Header/Header";
 
 export default function Home() {
-    const { search } = window.location;
-    const query = new URLSearchParams(search).get('s');
-    const [searchQuery, setSearchQuery] = useState(query || '');
+    const [data, setData] = useState("")
 
     return (
         <div>
-            <Header boolSearch={true} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
-            
+            <Header boolSearch={true} data={data} setData={setData}/>
+            <div>
+                <div className="homeContent">
+                    {data ? 
+                        data.map(auct => {
+
+                        })
+                    :
+                        <h1>Login to start bidding!</h1>
+                    }
+                </div>
+            </div>
         </div>
     );
 }
