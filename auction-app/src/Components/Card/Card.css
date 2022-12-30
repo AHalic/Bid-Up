@@ -5,6 +5,10 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    max-width: 332px;
+    max-height: 164px;
+    min-width: 280px;
+    min-height: 120px;
     width: 65vh;
     height: 30vh;
     padding: 24px 24px;
