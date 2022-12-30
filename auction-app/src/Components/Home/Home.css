@@ -20,7 +20,7 @@
 
 .titleHome {
     padding: 0;
-    margin: 0;
+    margin: 0 10px;
     margin-bottom: 50px;
     height: fit-content;
     color: #525E75;
@@ -36,4 +36,13 @@
     margin: 0;
     margin-left: 20px;
     font-weight: 400;
+}
+
+.cardsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: flex-start;
+    align-content: space-between;
 }
