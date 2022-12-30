@@ -15,36 +15,18 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { CiLogin } from "react-icons/ci";
 
-export default function Header({boolSearch, setData, signer, setSigner, auctFactory, setAuctFactory}) {
+export default function Header({boolSearch, setSearchQuery, setSigner, auctFactory, setAuctFactory}) {
     const [search, setSearch] = useState("");
 
     const navigate = useNavigate()
 
     // Search bar functions
-    const onSubmit = async (e) => {
+    const onSubmit = e => {
+        setSearchQuery(search)
         e.preventDefault()
         navigate(`?s=${search}`)
-
-        if (auctFactory) {
-            const localData = await auctFactory.getAuctions()
-
-            var newData = []
-            await Promise.all(localData.map(async (address) => {
-                const auctionContract = new ethers.Contract(address, auction.abi, signer)
-                const productName = await auctionContract.productName()
-                const close = await auctionContract.close()
-
-                if (productName.toLowerCase().includes(search.toLowerCase()) && !close)
-                    newData.push(address)
-            }))
-                .then(() => {
-                    setData(newData);
-                })
-
-        } else {
-            setData(false)
-        }
     };
+
     const handleSearchQueryChange = e => {
         setSearch(e.target.value)
     };
@@ -58,51 +40,23 @@ export default function Header({boolSearch, setData, signer, setSigner, auctFact
         }
 
     };
-
-    // Get array of auctions
-    const getAuctions = async () => {
-        if (auctFactory) {
-            const data = await auctFactory.getAuctions()
-
-            // if home then return only open auctions
-            if (boolSearch) {
-                var openData = []
-                await Promise.all(data.map(async (address) => {
-                    const auctionContract = new ethers.Contract(address, auction.abi, signer)
-                    const close = await auctionContract.close()
     
-                    if (!close)
-                        openData.push(address)
-                }))
-                    .then(() => {
-                        setData(openData);
-                    })
-                console.log();
-            } else {
-                setData(data)
-            }
-
-        } else {
-            setData(false)
-        }
+    function handleClick() {
+        setSearch('')
+        setSearchQuery('')
     }
-
-    useEffect(() => {
-        getAuctions()
-    }, [auctFactory])
-    
 
     return (
         <div className="header">
             {/* Logo */}
-            <Link to="/" onClick={getAuctions}>
+            <Link to="/" onClick={handleClick}>
                 <img src={logo} className="logo" alt="Bid Up Logo"/>
             </Link>
             
             {/* Search bar */}
             {boolSearch ?
                 <form className="search" onSubmit={onSubmit}> {/* onSubmit={onSubmit}  onChange={handleSearchQueryChange}*/}
-                    <input type="text" placeholder="Search a product" className="searchInput" onChange={handleSearchQueryChange}/>
+                    <input type="text" placeholder="Search a product" value={search} className="searchInput" onChange={handleSearchQueryChange}/>
                     <button type="submit" className="searchButton">
                         <RxMagnifyingGlass className="searchIcon" size={20}/>
                     </button>
