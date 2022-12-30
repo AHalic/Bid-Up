@@ -3,7 +3,7 @@
     border-radius: 6px;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     width: 65vh;
     height: 30vh;
