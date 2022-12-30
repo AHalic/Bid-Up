@@ -24,8 +24,10 @@ export default function Card({auctionAddress, signer}) {
             setImage(auctImage)
 
             const auctEndDate = await auctionContract.endTime()
-            const endDate = new Date(auctEndDate)
+            const endDate = new Date(Number(auctEndDate))
+            
             const today = new Date()
+
             setDeadline(endDate - today)
         }
         getData()
@@ -40,8 +42,8 @@ export default function Card({auctionAddress, signer}) {
             <div className="cardInfo">
                 <p className="cardTitle">{name}</p>
                 <p className="cardPrice">{`US $${price}`}</p>
-                {/* <p className="cardTimeLeft">{`${deadline/1000*60*60*24}d ${(deadline/1000*60*60)%24}h`}</p> */}
-                <p className="cardTimeLeft">1d 3h</p>
+                <p className="cardTimeLeft">{deadline > 0 ? `${deadline/1000*60*60*24}d ${(deadline/1000*60*60)%24}h` : 'deadline'}</p>
+                {/* <p className="cardTimeLeft">1d 3h</p> */}
             </div>
         </div>
     )
