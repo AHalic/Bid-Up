@@ -1,0 +1,47 @@
+.card {
+    background-color: #CCDAF5;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    width: 65vh;
+    height: 30vh;
+    padding: 24px 24px;
+    margin: 0 10px;
+}
+
+.cardImageDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: 100%;
+}
+
+.cardImage {
+    height: 80%;
+}
+
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 20px;
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
+}
+
+.cardTitle {
+    color: #525E75;
+    font-weight: 600;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.cardPrice, .cardTimeLeft {
+    color: #71819E;
+    font-weight: 500;
+    margin-top: 0;
+    font-size: 16px;
+}
