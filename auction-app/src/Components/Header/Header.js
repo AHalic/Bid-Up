@@ -11,7 +11,7 @@ import auction from "../../Services/keys/auctionKeys";
 
 import "./Header.css";
 import logo from "../../Assets/Logo.svg";
-import { RxLightningBolt, RxMagnifyingGlass } from "react-icons/rx";
+import { RxMagnifyingGlass } from "react-icons/rx";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { CiLogin } from "react-icons/ci";
 
@@ -29,15 +29,16 @@ export default function Header({boolSearch, setData, signer, setSigner, auctFact
             const localData = await auctFactory.getAuctions()
 
             var newData = []
-            localData.map(async (address) => {
+            await Promise.all(localData.map(async (address) => {
                 const auctionContract = new ethers.Contract(address, auction.abi, signer)
-
                 const productName = await auctionContract.productName()
 
-                if (productName.includes(search))
+                if (productName.toLowerCase().includes(search.toLowerCase()))
                     newData.push(address)
-            })
-            setData(newData)
+            }))
+                .then(() => {
+                    setData(newData);
+                })
 
         } else {
             setData(false)
