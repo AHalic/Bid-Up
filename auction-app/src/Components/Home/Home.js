@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+// import { Link, useNavigate } from 'react-router-dom';
 
 import './Home.css';
 import Header from "./../Header/Header";
@@ -16,13 +16,16 @@ export default function Home({data, setData, signer, setSigner, auctFactory, set
                     {data ? 
                         <div className="innerContent">
                             <p className="titleHome">OPEN AUCTIONS</p>
-                            {data.length > 0 ? 
-                                data.map(auct => {
-                                    <Card auctionAddress={auct}/>
-                                }) 
-                            :
-                                <p className="textNoAuct">No Auctions avaible</p>
-                            }
+
+                            <div className="cardsContainer">
+                                {data.length > 0 ? 
+                                    data.map(auct => (
+                                        <Card key={auct} auctionAddress={auct} signer={signer}/>
+                                    )) 
+                                :
+                                    <p className="textNoAuct">No Auctions avaible</p>
+                                }
+                            </div>
                         </div>
                     :
                         <p className="titleHome">Login to start bidding!</p>
