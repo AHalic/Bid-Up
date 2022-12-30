@@ -9,10 +9,12 @@ export default function Card({auctionAddress, signer}) {
     const [price, setPrice] = useState("")
     const [image, setImage] = useState("")
     const [deadline, setDeadline] = useState("")
+    const [auctContract, setAuctContract] = useState("")
 
     useEffect(() => {
         const getData = async () => {
             const auctionContract = new ethers.Contract(auctionAddress, auction.abi, signer)
+            setAuctContract(auctionContract)
 
             const auctName = await auctionContract.productName()
             setName(auctName)
@@ -31,18 +33,22 @@ export default function Card({auctionAddress, signer}) {
             setDeadline(endDate - today)
         }
         getData()
-        
+
     }, [])
 
+    function handleClick() {
+        
+    }
+
     return (
-        <div className="card">
+        <div className="card" onClick={handleClick}>
             <div className="cardImageDiv">
                 <img className="cardImage" src={image} alt={`${name}`}/>
             </div>
             <div className="cardInfo">
                 <p className="cardTitle">{name}</p>
                 <p className="cardPrice">{`US $${price}`}</p>
-                <p className="cardTimeLeft">{deadline > 0 ? `${deadline/1000*60*60*24}d ${(deadline/1000*60*60)%24}h` : 'To be closed'}</p>
+                <p className="cardTimeLeft">{deadline > 0 ? `${Math.floor(deadline/(1000*60*60*24))}d ${Math.floor((deadline/(1000*60*60))%24)}h` : 'To be closed'}</p>
             </div>
         </div>
     )
