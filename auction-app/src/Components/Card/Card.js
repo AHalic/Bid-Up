@@ -42,8 +42,7 @@ export default function Card({auctionAddress, signer}) {
             <div className="cardInfo">
                 <p className="cardTitle">{name}</p>
                 <p className="cardPrice">{`US $${price}`}</p>
-                <p className="cardTimeLeft">{deadline > 0 ? `${deadline/1000*60*60*24}d ${(deadline/1000*60*60)%24}h` : 'deadline'}</p>
-                {/* <p className="cardTimeLeft">1d 3h</p> */}
+                <p className="cardTimeLeft">{deadline > 0 ? `${deadline/1000*60*60*24}d ${(deadline/1000*60*60)%24}h` : 'To be closed'}</p>
             </div>
         </div>
     )
