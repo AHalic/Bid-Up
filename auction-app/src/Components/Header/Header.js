@@ -32,8 +32,9 @@ export default function Header({boolSearch, setData, signer, setSigner, auctFact
             await Promise.all(localData.map(async (address) => {
                 const auctionContract = new ethers.Contract(address, auction.abi, signer)
                 const productName = await auctionContract.productName()
+                const close = await auctionContract.close()
 
-                if (productName.toLowerCase().includes(search.toLowerCase()))
+                if (productName.toLowerCase().includes(search.toLowerCase()) && !close)
                     newData.push(address)
             }))
                 .then(() => {
@@ -63,7 +64,24 @@ export default function Header({boolSearch, setData, signer, setSigner, auctFact
         if (auctFactory) {
             const data = await auctFactory.getAuctions()
 
-            setData(data)
+            // if home then return only open auctions
+            if (boolSearch) {
+                var openData = []
+                await Promise.all(data.map(async (address) => {
+                    const auctionContract = new ethers.Contract(address, auction.abi, signer)
+                    const close = await auctionContract.close()
+    
+                    if (!close)
+                        openData.push(address)
+                }))
+                    .then(() => {
+                        setData(openData);
+                    })
+                console.log();
+            } else {
+                setData(data)
+            }
+
         } else {
             setData(false)
         }
