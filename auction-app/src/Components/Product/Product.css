@@ -108,6 +108,11 @@
     height: 30px;
 }
 
+.bidButton:hover {
+    cursor: pointer;
+    background-color: #95e0e8;
+}
+
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: #B5B7BB;
     opacity: 1; /* Firefox */
