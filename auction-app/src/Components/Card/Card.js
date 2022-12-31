@@ -5,20 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import './Card.css'
 import auction from "../../Services/keys/auctionKeys";
 
-export default function Card({auctionAddress, signer, setSigner, auctFactory, setAuctFactory}) {
+export default function Card({auctionAddress, signer}) {
     const [name, setName] = useState("")
     const [price, setPrice] = useState("")
     const [image, setImage] = useState("")
     const [deadline, setDeadline] = useState("")
     const [close, setClose] = useState(false)
-    const [auctContract, setAuctContract] = useState("")
 
     const navigate = useNavigate()
 
     useEffect(() => {
         const getData = async () => {
             const auctionContract = new ethers.Contract(auctionAddress, auction.abi, signer)
-            setAuctContract(auctionContract)
 
             const auctName = await auctionContract.productName()
             setName(auctName)
