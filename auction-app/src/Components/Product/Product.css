@@ -1,0 +1,134 @@
+.arrowContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0;
+}
+
+.backArrow {
+    color: #525E75;
+}
+
+.backArrow:hover {
+    cursor: pointer;
+}
+
+.product {
+    margin: 5px 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    height: 100%;
+}
+
+.productInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 5vw;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    height: 70%;
+}
+
+.productImageDiv {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 50%;
+    /* min-height: 260px;
+    min-width: 340;
+    max-width: 400px;
+    height: 100%; */
+}
+
+.productImage {
+    height: 80%;
+    width: 80%; 
+    object-fit: contain
+    /* height: 75%;
+    min-height: 200px;
+    max-width: 400px;
+    width: auto; */
+}
+
+.productTitle {
+    color: #525E75;
+    font-weight: 600;
+    margin-top: 0;
+    font-size: 2vw;
+}
+
+.productPrice, .productTimeLeft {
+    color: #71819E;
+    font-weight: 500;
+    margin-top: 0;
+    font-size: 1.5vw;
+}
+
+.bidInput {
+    color: #71819E;
+    background-color: #F9F9F9;
+    stroke: none;
+    border: 0.75px solid #71819E;
+    border-radius: 6px;
+    outline: none;
+    padding: 0;
+    padding-left: 5px;
+    height: 30px;
+}
+
+.bidInput:focus {
+    border: 0.75px solid #9BD1D7;
+}
+
+.bidInputContainer {
+    display: flex;
+    border-radius: 4px;
+    padding: 0;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    height: 30px;
+}
+
+.bidButton {
+    padding: 5px;
+    margin: 0;
+    margin-left: 5px;
+    background-color: #A6E3E9;
+    color: #F3F8FF;
+    border-radius: 6px;
+    outline: none;
+    border-width: 0px;
+    height: 30px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #B5B7BB;
+    opacity: 1; /* Firefox */
+}
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #B5B7BB;
+}
+  
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: #B5B7BB;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
