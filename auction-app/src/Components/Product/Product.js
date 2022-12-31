@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { ethers } from "ethers";
 import { Link, useNavigate } from 'react-router-dom';
+import swal from 'sweetalert';
 
 import Header from "../Header/Header";
 import auction from "../../Services/keys/auctionKeys";
@@ -48,6 +49,30 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
         navigate(-1)
     }
 
+    async function handleClickSend(e) {
+        e.preventDefault()
+
+        const bid = document.querySelector(".bidInput").value        
+        const auctionContract = new ethers.Contract(address, auction.abi, signer)
+        
+        Promise.all([
+            auctionContract.bid(String(bid))
+        ]).then(() => {
+            console.log('Your bid was sent successfully')
+            swal({
+                title: 'Your bid was sent successfully, the current bid may soon be updated',
+                icon: 'success',
+            })
+        }).catch((error) => {
+            console.log('Something went wrong')
+            console.log(error?.error?.message)
+            swal({
+                title: `Something went wrong: ${error?.error?.message}}`,
+                icon: 'error',
+            })
+        })
+    }
+
     return (
         <div className="homeOuter">
             <Header boolSearch={false} setSigner={setSigner} auctFactory={auctFactory} 
@@ -68,7 +93,7 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
                             <p className="productPrice">{`Current bid: US $${price}`}</p>
                             <div className="bidInputContainer">
                                 <input className="bidInput" type="number" placeholder="Enter bid"/>
-                                <button className="bidButton">Send</button>
+                                <button className="bidButton" type="button" onClick={handleClickSend}>Send</button>
                             </div>
                         </div>
                         {close ? 
