@@ -153,6 +153,19 @@ const auction = {
         },
         {
             "inputs": [],
+            "name": "closeDate",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "endTime",
             "outputs": [
                 {
