@@ -54,3 +54,15 @@
     margin-top: 0;
     font-size: 16px;
 }
+
+.cardPay {
+    border: 0.75px solid #CE3B3B;
+}
+
+.cardPriceNot {
+    color: #CE3B3B;
+}
+
+.cardPriceMy {
+    color: #4DAA56;
+}
