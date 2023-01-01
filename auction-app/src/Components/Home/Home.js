@@ -80,7 +80,7 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
                             <div className="cardsContainer">
                                 {data.length > 0 ? 
                                     data.map(auct => (
-                                        <Card key={auct} auctionAddress={auct} signer={signer}/>
+                                        <Card key={auct} auctionAddress={auct} signer={signer} isMyBid={false}/>
                                     )) 
                                 :
                                     <p className="textNoAuct">No Auctions avaible</p>
