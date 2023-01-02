@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import auction from './Services/keys/auctionKeys';
 import Home from './Components/Home/Home';
 import Product from './Components/Product/Product';
+import Bids from './Components/Bids/Bids';
 import { loginMetaMask } from './Services/metamask';
 
 const RoutesComponent = () => {
@@ -49,6 +50,8 @@ const RoutesComponent = () => {
                 {/* path: endereço em que a componente será visivel */}
                 <Route element={<Home signer={signer} setSigner={setSigner} 
                     auctFactory={auctFactory} setAuctFactory={setAuctFactory} />} path="/" />
+                <Route element={<Bids signer={signer} setSigner={setSigner} 
+                    auctFactory={auctFactory} setAuctFactory={setAuctFactory}/>} path="/bids" />
                 {auctions ?
                     auctions.map((address) => {
                         return (<Route key={address} element={<Product address={address} signer={signer} setSigner={setSigner}
