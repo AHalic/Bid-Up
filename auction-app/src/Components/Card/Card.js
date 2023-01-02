@@ -13,6 +13,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
     const [closeDate, setCloseDate] = useState("")
     const [close, setClose] = useState(false)
     const [highestBidder, setHighestBidder] = useState("")
+    
 
     const navigate = useNavigate()
 
@@ -43,14 +44,21 @@ export default function Card({auctionAddress, signer, isMyBid}) {
 
             const bidder = await auctionContract.highestBidder()
             setHighestBidder(bidder)
+            console.log(bidder, signer._address);
         }
         getData()
 
     }, [])
 
     function handleClick() {
-        navigate(`/product/${auctionAddress}`)
+        if (isMyBid && close && highestBidder == signer._address) {
+            console.log('You won this auction');
+
+        } else {
+            navigate(`/product/${auctionAddress}`)
+        }
     }
+
 
     return (
         <div className={`card ${close ? 'cardPay' : ''}`} onClick={handleClick}>
@@ -59,8 +67,8 @@ export default function Card({auctionAddress, signer, isMyBid}) {
             </div>
             <div className="cardInfo">
                 <p className="cardTitle">{name}</p>
-                <p className={`cardPrice ${isMyBid && highestBidder != signer ? 'cardPriceNot': 'cardPriceMy'}'}`}
-                >{`US $${price} ${isMyBid && highestBidder == signer ? ' not yours!': ''}`}</p>
+                <p className={`cardPrice ${isMyBid && highestBidder != signer._address ? 'cardPriceNot': 'cardPriceMy'}`}
+                >{`US $${price} ${isMyBid && highestBidder != signer._address ? ' not yours!': ''}`}</p>
                 {close ? 
                     <p className="cardTimeLeft">{`Closed on ${closeDate.toLocaleDateString("en-US")}`}</p> 
                 : 
