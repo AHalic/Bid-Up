@@ -98,3 +98,28 @@ input::placeholder {
     margin: 0;
     color: #A6E3E9;
 }
+
+.dropdown {
+    position: absolute;
+    display: block;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0 5px;
+    list-style-type: none;
+    background-color: #A6E3E9;
+    border-radius: 4px;
+}
+
+.item {
+    font-family: 'Roboto', sans-serif;
+    color: #525E75;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 6px 9px;
+    border-top: #9BD1D7 1px solid;
+    border-bottom: #9BD1D7 1px solid;
+}
+
+.item:hover {
+    background-color: #9BD1D7;
+}
