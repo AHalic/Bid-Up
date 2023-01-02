@@ -17,6 +17,8 @@ import { CiLogin } from "react-icons/ci";
 
 export default function Header({boolSearch, setSearchQuery, setSigner, auctFactory, setAuctFactory}) {
     const [search, setSearch] = useState("");
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const toggle = () => setDropdownOpen((prevState) => !prevState);
 
     const navigate = useNavigate()
 
@@ -73,14 +75,37 @@ export default function Header({boolSearch, setSearchQuery, setSigner, auctFacto
                 </button>
             :
             // Profile button
-                <button className="profileBtn">
-                    <p className="profileBtnText">
-                        PROFILE
-                    </p>
-                    <span>
-                        <IoMdArrowDropdown className="profileBtnIcon" size={20}/>
-                    </span>
-                </button>
+                <div className="dropdownProfile">
+                    <button className="profileBtn" type="button" onClick={toggle}>
+                        <p className="profileBtnText">
+                            PROFILE
+                        </p>
+                        <span>
+                            <IoMdArrowDropdown className="profileBtnIcon" size={20}/>
+                        </span>
+                    </button>
+                    {dropdownOpen ? 
+                        <ul className="dropdown">
+                            <Link to='/bids' style={{ textDecoration: 'none' }}>
+                                <div className="item">
+                                    My Bids
+                                </div>
+                            </Link>
+                            <Link to='/bids' style={{ textDecoration: 'none' }}>
+                                <div className="item">
+                                    My Auctions
+                                </div>
+                            </Link>
+                            <Link to='/bids' style={{ textDecoration: 'none' }}>
+                                <div className="item">
+                                    My Shoppings
+                                </div>
+                            </Link>
+                        </ul>
+                    :
+                        null
+                    }
+                </div>
             }
         </div>
     );
