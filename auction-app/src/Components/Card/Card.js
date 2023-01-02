@@ -33,25 +33,24 @@ export default function Card({auctionAddress, signer, isMyBid}) {
             const auctClose = await auctionContract.close()
             setClose(auctClose)
 
-            var closeDate = await auctionContract.closeDate()
-            closeDate = new Date(Number(closeDate))
-            setCloseDate(closeDate)
-
+            var closedDate = await auctionContract.closeDate()
+            closedDate = new Date(Number(closedDate))
+            setCloseDate(closedDate.toLocaleDateString('pt-br'))
+            
             const auctEndDate = await auctionContract.endTime()
             const endDate = new Date(Number(auctEndDate))
             const today = new Date()
             setDeadline(endDate - today)
-
+            
             const bidder = await auctionContract.highestBidder()
             setHighestBidder(bidder)
-            console.log(bidder, signer._address);
         }
         getData()
 
     }, [])
 
     function handleClick() {
-        if (isMyBid && close && highestBidder == signer._address) {
+        if (isMyBid && close && highestBidder === signer._address) {
             console.log('You won this auction');
 
         } else {
@@ -67,10 +66,10 @@ export default function Card({auctionAddress, signer, isMyBid}) {
             </div>
             <div className="cardInfo">
                 <p className="cardTitle">{name}</p>
-                <p className={`cardPrice ${isMyBid && highestBidder != signer._address ? 'cardPriceNot': 'cardPriceMy'}`}
-                >{`US $${price} ${isMyBid && highestBidder != signer._address ? ' not yours!': ''}`}</p>
+                <p className={`cardPrice ${isMyBid && highestBidder !== signer._address ? 'cardPriceNot': 'cardPriceMy'}`}
+                >{`US $${price} ${isMyBid && highestBidder !== signer._address ? ' not yours!': ''}`}</p>
                 {close ? 
-                    <p className="cardTimeLeft">{`Closed on ${closeDate.toLocaleDateString("en-US")}`}</p> 
+                    <p className="cardTimeLeft">{`Closed on ${closeDate}`}</p> 
                 : 
                     <p className="cardTimeLeft">{deadline > 0 ? `${Math.floor(deadline/(1000*60*60*24))}d ${Math.floor((deadline/(1000*60*60))%24)}h` : 'To be closed'}</p>
                 }
