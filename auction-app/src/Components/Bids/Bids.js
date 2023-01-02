@@ -14,7 +14,6 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
     // Get array of auctions    
     const getAuctions = async () => {
         if (auctFactory) {
-            console.log(signer._address);
             const data = await auctFactory.getUserHistory(signer._address)
 
             var openData = []
@@ -23,10 +22,12 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
                 const auctionContract = new ethers.Contract(address, auction.abi, signer)
                 const close = await auctionContract.close()
 
-                if (!close)
+                if (!close) {
                     openData.push(address)
-                else
+                }
+                else {
                     closeData.push(address)
+                }
             }))
                 .then(() => {
                     setOpenAuct(openData)
@@ -48,7 +49,6 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
                 setAuctFactory={setAuctFactory}/>
 
                 <div className="homeContent">
-
                     {closeAuct && closeAuct.length > 0 ? 
                         <div className="innerContent">
                             <p className="titleHome">WAITING PAYMENT</p>
@@ -61,25 +61,27 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
                                 }
                             </div>
                         </div>
-                    :
-                        openAuct && openAuct.length > 0 ?
-                            <div className="innerContent">
-                                <p className="titleHome">MY BIDS</p>
+                    : null}
+                    {openAuct && openAuct.length > 0 ?
+                        <div className="innerContent">
+                            <p className="titleHome">MY BIDS</p>
 
-                                <div className="cardsContainer">
-                                    {
-                                        openAuct.map(auct => (
-                                            <Card key={auct} auctionAddress={auct} signer={signer} isMyBid={true}/>
-                                        )) 
-                                    }
-                                </div>
+                            <div className="cardsContainer">
+                                {
+                                    openAuct.map(auct => (
+                                        <Card key={auct} auctionAddress={auct} signer={signer} isMyBid={true}/>
+                                    )) 
+                                }
                             </div>
-                        :
-                            closeAuct && openAuct ?
-                                <p className="titleHome">You haven't bid yet</p>
-                            :
-                                <p className="titleHome">Login to start bidding!</p>
-                    }
+                        </div>
+                    : null}
+                    {closeAuct && openAuct && openAuct.length === 0 && closeAuct.length === 0 ?
+                            <p className="titleHome">You haven't bid yet</p>
+                    : null}
+                    {openAuct === false || closeAuct === false ? 
+                        <p className="titleHome">You haven't bid yet</p>
+                    : null}
+                    
                 </div>
 
         </div>
