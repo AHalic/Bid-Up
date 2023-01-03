@@ -238,6 +238,19 @@ const auction = {
         },
         {
             "inputs": [],
+            "name": "payed",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "productName",
             "outputs": [
                 {
