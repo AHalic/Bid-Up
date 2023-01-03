@@ -21,12 +21,14 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
             await Promise.all(data.map(async (address) => {
                 const auctionContract = new ethers.Contract(address, auction.abi, signer)
                 const close = await auctionContract.close()
+                const payed = await auctionContract.payed()
 
                 if (!close) {
                     openData.push(address)
                 }
                 else {
-                    closeData.push(address)
+                    if (!payed)
+                        closeData.push(address)
                 }
             }))
                 .then(() => {
