@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert';
 
 import './Card.css'
 import auction from "../../Services/keys/auctionKeys";
@@ -13,6 +14,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
     const [closeDate, setCloseDate] = useState("")
     const [close, setClose] = useState(false)
     const [highestBidder, setHighestBidder] = useState("")
+    const [auctContract, setAuctContract] = useState("")
     
 
     const navigate = useNavigate()
@@ -20,6 +22,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
     useEffect(() => {
         const getData = async () => {
             const auctionContract = new ethers.Contract(auctionAddress, auction.abi, signer)
+            setAuctContract(auctionContract)
 
             const auctName = await auctionContract.productName()
             setName(auctName)
@@ -51,7 +54,37 @@ export default function Card({auctionAddress, signer, isMyBid}) {
 
     function handleClick() {
         if (isMyBid && close && highestBidder === signer._address) {
-            console.log('You won this auction');
+
+            swal("Are you ready to pay?", {
+                buttons: ['Not yet...', 'Yes!'],
+                })  
+                .then((value) => {
+                    if (value) {
+                        swal({
+                                title: "Are you sure?",
+                                icon: "warning",
+                                buttons: ['Cancel', 'Yes, pay!'],
+                                dangerMode: true,
+                            })
+                            .then((willDelete) => {
+                                if (willDelete) {
+                                    Promise.all([
+                                        auctContract.pay()
+                                    ]).then(() => {
+                                        swal({
+                                            title: 'You paid successfully! The owner will contact you soon',
+                                            icon: 'success',
+                                        })
+                                    }).catch((err) => {
+                                        swal({
+                                            title: 'Something went wrong, please try again',
+                                            icon: 'error',
+                                        })
+                                    })
+                                }
+                            });
+                    }
+                });
 
         } else {
             navigate(`/product/${auctionAddress}`)
