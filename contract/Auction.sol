@@ -2,8 +2,10 @@
 
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
 // Define the Auction contract
-contract Auction {
+contract Auction is ERC20 {
     // Store the current highest bid and bidder
     uint256 public highestBid;
     address public highestBidder;
@@ -18,8 +20,10 @@ contract Auction {
     // Store the image data as a base64-encoded string
     string public imageData;
     bool public close = false;
+    uint public closeDate;
+    bool public payed = false;
 
-    constructor (address _seller, uint _initialBid, uint _startTime, uint _endTime, string memory _productName, string memory _imageData) {
+    constructor (address _seller, uint _initialBid, uint _startTime, uint _endTime, string memory _productName, string memory _imageData) ERC20("Turing", "Turing") {
         highestBid = _initialBid;
         seller = _seller;
         startTime = _startTime;
@@ -35,10 +39,10 @@ contract Auction {
 
     modifier bidAutorize (uint256 value) {
         // Check that the value of the new bid is higher than the current highest bid
-        require(value > highestBid);
+        require(value > highestBid, "the bid must be higher");
 
         // Check that the auction is still open
-        require(!close);
+        require(!close, "this auction is closed");
         _;
     }
 
@@ -60,24 +64,32 @@ contract Auction {
         _;
     }
 
-    modifier closed() {
+    modifier payAutorize() {
         // Check that the auction is closed
         require(close);
+        require(!payed);
+        require(msg.sender == highestBidder);
         _;
+    }
+
+    event Received(address, uint);
+    receive() external payable {
+        emit Received(msg.sender, msg.value);
     }
 
     // Define a function to close the auction and finalize the results
     function closeAuction(uint dateNow) public closeAutorize(dateNow) {
         // Trigger the AuctionClosed event
         emit AuctionClosed(highestBid, highestBidder);
-
+        closeDate = dateNow;
         close = true;
     }
 
-    function pay() public closed {
+    function pay() payable external payAutorize {
         // Transfer the winning bid to the seller
-        (bool success,) = seller.call{value: highestBid}("");
-        require(success, "Failed to send money");
+        payable(seller).transfer(highestBid);
+        // require(success, "Failed to send money");
+        payed = true;
     }
 
     // Define a function that checks if a specific address has bid
