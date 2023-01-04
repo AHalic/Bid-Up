@@ -3,6 +3,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     margin: 0;
+    margin-top: 40px;
 }
 
 .backArrow {
@@ -30,7 +31,7 @@
     margin-left: 5vw;
     padding: 20px;
     font-family: 'Roboto', sans-serif;
-    height: 70%;
+    /* height: 70%; */
 }
 
 .productImageDiv {
@@ -40,6 +41,7 @@
     align-items: center;
     position: relative;
     width: 50%;
+    height: 80%;
     /* min-height: 260px;
     min-width: 340;
     max-width: 400px;
@@ -47,7 +49,7 @@
 }
 
 .productImage {
-    height: 80%;
+    height: 70%;
     width: 80%; 
     object-fit: contain
     /* height: 75%;
@@ -106,6 +108,10 @@
     outline: none;
     border-width: 0px;
     height: 30px;
+}
+
+.pricingContainer {
+    margin: 20px 0;
 }
 
 .bidButton:hover {
