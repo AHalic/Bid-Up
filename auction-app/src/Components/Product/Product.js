@@ -55,13 +55,21 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
         const bid = document.querySelector(".bidInput").value        
         const auctionContract = new ethers.Contract(address, auction.abi, signer)
         
+        
         Promise.all([
             auctionContract.bid(String(bid))
         ]).then(() => {
-            console.log('Your bid was sent successfully')
             swal({
-                title: 'Your bid was sent successfully, the current bid may soon be updated',
-                icon: 'success',
+                title: 'Your bid is in process, please wait',
+                icon: 'info',
+                button: false,
+                closeOnClickOutside: false,
+            })
+            auctionContract.on("NewBid", (from, to, value, event) => {
+                swal({
+                    title: 'Your bid was sent successfully, the current bid may soon be updated',
+                    icon: 'success',
+                })
             })
         }).catch((error) => {
             console.log('Something went wrong')
