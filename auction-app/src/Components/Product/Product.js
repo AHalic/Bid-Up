@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import { ethers } from "ethers";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
 
 import Header from "../Header/Header";
@@ -43,7 +43,7 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
         }
         getData()
 
-    }, [])
+    }, [address, signer, price])
 
     function handleClickBack() {
         navigate(-1)
@@ -69,6 +69,8 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
                 swal({
                     title: 'Your bid was sent successfully, the current bid may soon be updated',
                     icon: 'success',
+                }).then(() => {
+                    setPrice(value)
                 })
             })
         }).catch((error) => {
@@ -98,7 +100,7 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
                     <div className="productInfo">
                         <p className="productTitle">{name}</p>
                         <div className="pricingContainer">
-                            <p className="productPrice">{`Current bid: US $${price}`}</p>
+                            <p className="productPrice">{`Current bid: eth $${price}`}</p>
                             <div className="bidInputContainer">
                                 <input className="bidInput" type="number" placeholder="Enter bid"/>
                                 <button className="bidButton" type="button" onClick={handleClickSend}>Send</button>
