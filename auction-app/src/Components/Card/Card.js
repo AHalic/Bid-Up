@@ -15,6 +15,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
     const [close, setClose] = useState(false)
     const [highestBidder, setHighestBidder] = useState("")
     const [auctContract, setAuctContract] = useState("")
+    const [seller, setSeller] = useState("")
     
 
     const navigate = useNavigate()
@@ -47,10 +48,14 @@ export default function Card({auctionAddress, signer, isMyBid}) {
             
             const bidder = await auctionContract.highestBidder()
             setHighestBidder(bidder)
+
+            const owner = await auctionContract.seller()
+            setSeller(owner)
         }
         getData()
 
-    }, [])
+    }, [auctionAddress, signer])
+
 
     function handleClick() {
         if (isMyBid && close && highestBidder === signer._address) {
@@ -66,18 +71,31 @@ export default function Card({auctionAddress, signer, isMyBid}) {
                                 buttons: ['Cancel', 'Yes, pay!'],
                                 dangerMode: true,
                             })
-                            .then((willDelete) => {
+                            .then(async (willDelete) => {
                                 if (willDelete) {
+                                    const options = {value: String(price)}
                                     Promise.all([
-                                        auctContract.pay()
+                                        auctContract.pay(options)
+
                                     ]).then(() => {
                                         swal({
-                                            title: 'You paid successfully! The owner will contact you soon',
-                                            icon: 'success',
+                                            title: 'Your payment is in process, please wait',
+                                            icon: 'info',
+                                            button: false,
+                                            closeOnClickOutside: false,
+                                        })
+                                        auctContract.on("Sold", (from, valueSent, valueReceived) => {
+                                            swal({
+                                                title: `You paid successfully! The owner will contact you soon`,
+                                                icon: 'success',
+                                            }).then(() => {
+                                                window.location.reload(true);
+                                            })
                                         })
                                     }).catch((err) => {
+                                        console.log(err);
                                         swal({
-                                            title: 'Something went wrong, please try again',
+                                            title: `Something went wrong, please try again ${err}`,
                                             icon: 'error',
                                         })
                                     })
@@ -100,7 +118,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
             <div className="cardInfo">
                 <p className="cardTitle">{name}</p>
                 <p className={`cardPrice ${isMyBid && highestBidder !== signer._address ? 'cardPriceNot': 'cardPriceMy'}`}
-                >{`US $${price} ${isMyBid && highestBidder !== signer._address ? ' not yours!': ''}`}</p>
+                >{`eth $${price} ${isMyBid && highestBidder !== signer._address ? ' not yours!': ''}`}</p>
                 {close ? 
                     <p className="cardTimeLeft">{`Closed on ${closeDate}`}</p> 
                 : 
