@@ -15,7 +15,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
     const [close, setClose] = useState(false)
     const [highestBidder, setHighestBidder] = useState("")
     const [auctContract, setAuctContract] = useState("")
-    const [seller, setSeller] = useState("")
+    const [payed, setPayed] = useState(false)
     
 
     const navigate = useNavigate()
@@ -49,8 +49,8 @@ export default function Card({auctionAddress, signer, isMyBid}) {
             const bidder = await auctionContract.highestBidder()
             setHighestBidder(bidder)
 
-            const owner = await auctionContract.seller()
-            setSeller(owner)
+            const pay = await auctionContract.payed()
+            setPayed(pay)
         }
         getData()
 
@@ -111,7 +111,7 @@ export default function Card({auctionAddress, signer, isMyBid}) {
 
 
     return (
-        <div className={`card ${close ? 'cardPay' : ''}`} onClick={handleClick}>
+        <div className={`card ${close && !payed ? 'cardPay' : ''}`} onClick={handleClick}>
             <div className="cardImageDiv">
                 <img className="cardImage" src={image} alt={`${name}`}/>
             </div>
