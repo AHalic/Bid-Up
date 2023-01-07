@@ -3,9 +3,10 @@ import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import { ethers } from 'ethers';
 
 import auction from './Services/keys/auctionKeys';
-import Home from './Components/Home/Home';
-import Product from './Components/Product/Product';
-import Bids from './Components/Bids/Bids';
+import Home from './Pages/Home/Home';
+import Product from './Pages/Product/Product';
+import Bids from './Pages/Bids/Bids';
+import Shopping from './Pages/Shopping/Shopping';
 import { loginMetaMask } from './Services/metamask';
 
 const RoutesComponent = () => {
@@ -52,6 +53,8 @@ const RoutesComponent = () => {
                     auctFactory={auctFactory} setAuctFactory={setAuctFactory} />} path="/" />
                 <Route element={<Bids signer={signer} setSigner={setSigner} 
                     auctFactory={auctFactory} setAuctFactory={setAuctFactory}/>} path="/bids" />
+                <Route element={<Shopping signer={signer} setSigner={setSigner}
+                    auctFactory={auctFactory} setAuctFactory={setAuctFactory} />} path="/shopping" />
                 {auctions ?
                     auctions.map((address) => {
                         return (<Route key={address} element={<Product address={address} signer={signer} setSigner={setSigner}
