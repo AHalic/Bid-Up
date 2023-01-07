@@ -2,30 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import { ethers } from 'ethers';
 
-import auction from './Services/keys/auctionKeys';
 import Home from './Pages/Home/Home';
 import Product from './Pages/Product/Product';
 import Bids from './Pages/Bids/Bids';
-import Shopping from './Pages/Shopping/Shopping';
 import { loginMetaMask } from './Services/metamask';
 
 const RoutesComponent = () => {
-    const [auctions, setAuctions] = useState("")
+    const [auctions, setAuctions] = useState([])
+    const [history, setHistory] = useState([])
     const [signer, setSigner] = useState("");
     const [auctFactory, setAuctFactory] = useState("");
 
-    const getAuctions = async () => {
-        if (auctFactory) {
-            const data = await auctFactory.getAuctions()
-
-            setAuctions(data);
-        } else {
-            setAuctions(false)
-        }
-    }
     useEffect(() => {
+        const getAuctions = async () => {
+            if (auctFactory) {
+                const data = await auctFactory.getAuctions()
+                const historyData = await auctFactory.getUserHistory(signer._address)
+    
+                setHistory(historyData)
+                setAuctions(data)
+            } else {
+                setHistory(false)
+                setAuctions(false)
+            }
+        }
         getAuctions()
-    }, [auctFactory])
+    }, [auctFactory, signer._address])
 
     useEffect(() => {
         const checkMetaMask = async () => {
@@ -50,11 +52,13 @@ const RoutesComponent = () => {
             <Routes>
                 {/* path: endereço em que a componente será visivel */}
                 <Route element={<Home signer={signer} setSigner={setSigner} 
-                    auctFactory={auctFactory} setAuctFactory={setAuctFactory} />} path="/" />
+                    auctFactory={auctFactory} setAuctFactory={setAuctFactory}
+                    auctions={auctions} isHome={true} title={'OPEN AUCTIONS'} />} path="/" />
                 <Route element={<Bids signer={signer} setSigner={setSigner} 
                     auctFactory={auctFactory} setAuctFactory={setAuctFactory}/>} path="/bids" />
-                <Route element={<Shopping signer={signer} setSigner={setSigner}
-                    auctFactory={auctFactory} setAuctFactory={setAuctFactory} />} path="/shopping" />
+                <Route element={<Home signer={signer} setSigner={setSigner}
+                    auctFactory={auctFactory} setAuctFactory={setAuctFactory}
+                    auctions={history} isHome={false} title={'MY SHOPPING'} />} path="/shopping" />
                 {auctions ?
                     auctions.map((address) => {
                         return (<Route key={address} element={<Product address={address} signer={signer} setSigner={setSigner}

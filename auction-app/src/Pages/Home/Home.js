@@ -7,20 +7,23 @@ import Header from "./../../Components/Header/Header";
 import Card from "./../../Components/Card/Card";
 import auction from "../../Services/keys/auctionKeys";
 
-export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
+export default function Home({signer, setSigner, auctFactory, setAuctFactory, auctions, isHome, title}) {
     const { search } = window.location;
     const query = new URLSearchParams(search).get('s');
     const [searchQuery, setSearchQuery] = useState(query || '');
     const [data, setData] = useState("")
 
     // Get array of auctions    
-    const getAuctions = async () => {
-        if (!searchQuery) {
-            if (auctFactory) {
-                const data = await auctFactory.getAuctions()
+    // useEffect(() => {
+    //     getAuctions()
+    // }, [auctFactory, searchQuery])
     
+    // Search bar functions
+    useEffect(() => {
+        const getAuctions = async () => {
+            if (auctFactory) {
                 var openData = []
-                await Promise.all(data.map(async (address) => {
+                await Promise.all(auctions.map(async (address) => {
                     const auctionContract = new ethers.Contract(address, auction.abi, signer)
                     const close = await auctionContract.close()
     
@@ -34,49 +37,69 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
                 setData(false)
             }
         }
-    }
-    useEffect(() => {
-        getAuctions()
-    }, [auctFactory, searchQuery])
-
-    // Search bar functions
-    useEffect(() => {
         const searchData = async () => {
-            if (searchQuery) {
-                if (auctFactory) {
-                    const localData = await auctFactory.getAuctions()
+            if (auctFactory) {
+                var newData = []
+                await Promise.all(auctions.map(async (address) => {
+                    const auctionContract = new ethers.Contract(address, auction.abi, signer)
+                    const productName = await auctionContract.productName()
+                    const close = await auctionContract.close()
+                    
+                    if (productName.toLowerCase().includes(searchQuery.toLowerCase()) && !close)
+                        newData.push(address)
+                }))
+                    .then(() => {
+                        setData(newData);
+                    })
 
-                    var newData = []
-                    await Promise.all(localData.map(async (address) => {
-                        const auctionContract = new ethers.Contract(address, auction.abi, signer)
-                        const productName = await auctionContract.productName()
-                        const close = await auctionContract.close()
-                        
-                        if (productName.toLowerCase().includes(searchQuery.toLowerCase()) && !close)
-                            newData.push(address)
-                    }))
-                        .then(() => {
-                            setData(newData);
-                        })
-
-                } else {
-                    setData(false)
-                }
+            } else {
+                setData(false)
             }
         }
-        searchData()
-    }, [searchQuery, auctFactory, signer])
+        const getHistory = async () => {
+            if (auctFactory) {    
+                var payedData = []
+                await Promise.all(auctions.map(async (address) => {
+                    const auctionContract = new ethers.Contract(address, auction.abi, signer)
+                    const bidder = await auctionContract.highestBidder()
+                    const payed = await auctionContract.payed()
+    
+                    if (payed && bidder === signer._address) {
+                        payedData.push(address)
+                    }
+                }))
+                    .then(() => {
+                        setData(payedData)
+                    })
+            } else {
+                setData(false)
+            }
+        }
+
+        if (auctions) {
+            if (isHome) {
+                if (!searchQuery) {
+                    getAuctions()
+                }
+                else {
+                    searchData()
+                }
+            } else {
+                getHistory()
+            }
+        }
+    }, [searchQuery, auctFactory, signer, isHome, auctions])
     
     return (
         <div className="homeOuter">
-            <Header boolSearch={true} setSigner={setSigner} auctFactory={auctFactory} 
+            <Header boolSearch={isHome} setSigner={setSigner} auctFactory={auctFactory} 
                 setAuctFactory={setAuctFactory} setSearchQuery={setSearchQuery}/>
             {/* <div> */}
                 <div className="homeContent">
                     {data ? 
                         <div className="innerContent">
-                            <p className="titleHome">OPEN AUCTIONS</p>
-
+                            <p className="titleHome">{title}</p> 
+                            {/* OPEN AUCTIONS */}
                             <div className="cardsContainer">
                                 {data.length > 0 ? 
                                     data.map(auct => (
