@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // Define the Auction contract
-contract Auction is ERC20 {
+contract Auction is ERC20{
     // Store the current highest bid and bidder
     uint256 public highestBid;
     address public highestBidder;
@@ -23,7 +23,7 @@ contract Auction is ERC20 {
     uint public closeDate;
     bool public payed = false;
 
-    constructor (address _seller, uint _initialBid, uint _startTime, uint _endTime, string memory _productName, string memory _imageData) ERC20("Turing", "Turing") {
+    constructor (address _seller, uint _initialBid, uint _startTime, uint _endTime, string memory _productName, string memory _imageData) payable ERC20("Auction", "ACT") {
         highestBid = _initialBid;
         seller = _seller;
         startTime = _startTime;
@@ -36,6 +36,8 @@ contract Auction is ERC20 {
     event NewBid(address bidder, uint value);
     // Define an event for when the auction is closed
     event AuctionClosed(uint finalBid, address winner);
+    // Define an event for when the client finish the payment
+    event Sold(address buyer, uint amount, uint balance);
 
     modifier bidAutorize (uint256 value) {
         // Check that the value of the new bid is higher than the current highest bid
@@ -44,6 +46,10 @@ contract Auction is ERC20 {
         // Check that the auction is still open
         require(!close, "this auction is closed");
         _;
+    }
+
+    function generateToken(address sender, uint256 value) payable public {
+        _mint(sender, value);
     }
 
     // Define a function to place a new bid
@@ -59,23 +65,20 @@ contract Auction is ERC20 {
 
     modifier closeAutorize(uint dateNow) {
         // Check that the caller is the seller
-        require(msg.sender == seller);
-        require(dateNow >= endTime);
+        require(msg.sender == seller, "Only the owner can close this auction");
+        require(dateNow >= endTime, "The auction can only be closed on the deadline");
         _;
     }
 
     modifier payAutorize() {
         // Check that the auction is closed
-        require(close);
-        require(!payed);
-        require(msg.sender == highestBidder);
+        require(close, "The auction is still open");
+        require(!payed, "Product already payed");
+        require(msg.sender == highestBidder, "Only the owner of the highest bid can pay");
+        require(msg.value == highestBid, "The payment must be equal to the bid");
         _;
     }
 
-    event Received(address, uint);
-    receive() external payable {
-        emit Received(msg.sender, msg.value);
-    }
 
     // Define a function to close the auction and finalize the results
     function closeAuction(uint dateNow) public closeAutorize(dateNow) {
@@ -86,10 +89,9 @@ contract Auction is ERC20 {
     }
 
     function pay() payable external payAutorize {
-        // Transfer the winning bid to the seller
-        payable(seller).transfer(highestBid);
-        // require(success, "Failed to send money");
         payed = true;
+        payable(seller).transfer(address(this).balance);
+        emit Sold(msg.sender, msg.value, address(this).balance);
     }
 
     // Define a function that checks if a specific address has bid
@@ -101,9 +103,5 @@ contract Auction is ERC20 {
         }
 
         return false;
-    }
-
-    function getClose() public view returns (bool) {
-        return close;
     }
 }

@@ -4,10 +4,15 @@ pragma solidity ^0.8.0;
 
 import "./Auction.sol";
 
+
 // Define the AuctionFactory contract
 contract AuctionFactory {
     // Create an array to store the deployed contract instances
     Auction[] public deployedAuctions;
+
+
+    event AuctionCreated(address seller, address auction, string name, uint256 createdAt);
+
 
     // Define a function to create a new instance of the Auction contract
     function createAuction(
@@ -17,9 +22,12 @@ contract AuctionFactory {
         uint _startTime,
         uint _endTime,
         string memory _imageData
-    ) public {
+    ) external payable {
         // Deploy a new instance of the Auction contract and store it in the array
-        deployedAuctions.push(new Auction(_seller, _initialBid, _startTime, _endTime, _productName, _imageData));
+        Auction auctionContract = new Auction(_seller, _initialBid, _startTime, _endTime, _productName, _imageData);
+        deployedAuctions.push(auctionContract);
+
+        emit AuctionCreated(_seller, address(auctionContract), _productName, _startTime);
     }
 
 
