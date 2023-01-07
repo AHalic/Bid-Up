@@ -11,36 +11,36 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {
     const [openAuct, setOpenAuct] = useState("")
     const [closeAuct, setCloseAuct] = useState("")
 
-    // Get array of auctions    
-    const getAuctions = async () => {
-        if (auctFactory) {
-            const data = await auctFactory.getUserHistory(signer._address)
-
-            var openData = []
-            var closeData = []
-            await Promise.all(data.map(async (address) => {
-                const auctionContract = new ethers.Contract(address, auction.abi, signer)
-                const close = await auctionContract.close()
-                const payed = await auctionContract.payed()
-
-                if (!close) {
-                    openData.push(address)
-                }
-                else {
-                    if (!payed)
-                        closeData.push(address)
-                }
-            }))
-                .then(() => {
-                    setOpenAuct(openData)
-                    setCloseAuct(closeData)
-                })
-        } else {
-            setOpenAuct(false)
-            setCloseAuct(false)
-        }
-    }
     useEffect(() => {
+        // Get array of auctions    
+        const getAuctions = async () => {
+            if (auctFactory) {
+                const data = await auctFactory.getUserHistory(signer._address)
+    
+                var openData = []
+                var closeData = []
+                await Promise.all(data.map(async (address) => {
+                    const auctionContract = new ethers.Contract(address, auction.abi, signer)
+                    const close = await auctionContract.close()
+                    const payed = await auctionContract.payed()
+    
+                    if (!close) {
+                        openData.push(address)
+                    }
+                    else {
+                        if (!payed)
+                            closeData.push(address)
+                    }
+                }))
+                    .then(() => {
+                        setOpenAuct(openData)
+                        setCloseAuct(closeData)
+                    })
+            } else {
+                setOpenAuct(false)
+                setCloseAuct(false)
+            }
+        }
         getAuctions()
     }, [auctFactory, signer])
 

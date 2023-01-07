@@ -2,12 +2,10 @@
 // This is the header component. It contains the logo, the search bar and the login button.
 //
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
-import { ethers } from "ethers";
 
 import { loginMetaMask } from '../../Services/metamask'
-import auction from "../../Services/keys/auctionKeys";
 
 import "./Header.css";
 import logo from "../../Assets/Logo.svg";
