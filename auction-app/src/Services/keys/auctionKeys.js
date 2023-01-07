@@ -33,7 +33,7 @@ const auction = {
                     "type": "string"
                 }
             ],
-            "stateMutability": "nonpayable",
+            "stateMutability": "payable",
             "type": "constructor"
         },
         {
@@ -105,17 +105,23 @@ const auction = {
                 {
                     "indexed": false,
                     "internalType": "address",
-                    "name": "",
+                    "name": "buyer",
                     "type": "address"
                 },
                 {
                     "indexed": false,
                     "internalType": "uint256",
-                    "name": "",
+                    "name": "amount",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "balance",
                     "type": "uint256"
                 }
             ],
-            "name": "Received",
+            "name": "Sold",
             "type": "event"
         },
         {
@@ -351,16 +357,21 @@ const auction = {
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "getClose",
-            "outputs": [
+            "inputs": [
                 {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
+                    "internalType": "address",
+                    "name": "sender",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
                 }
             ],
-            "stateMutability": "view",
+            "name": "generateToken",
+            "outputs": [],
+            "stateMutability": "payable",
             "type": "function"
         },
         {
@@ -576,10 +587,6 @@ const auction = {
             ],
             "stateMutability": "nonpayable",
             "type": "function"
-        },
-        {
-            "stateMutability": "payable",
-            "type": "receive"
         }
     ],
 }

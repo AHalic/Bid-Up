@@ -1,6 +1,37 @@
 const auctionFact = {
     "abi": [
         {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "seller",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "auction",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "createdAt",
+                    "type": "uint256"
+                }
+            ],
+            "name": "AuctionCreated",
+            "type": "event"
+        },
+        {
             "inputs": [
                 {
                     "internalType": "address",
@@ -35,7 +66,7 @@ const auctionFact = {
             ],
             "name": "createAuction",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "payable",
             "type": "function"
         },
         {
@@ -90,7 +121,7 @@ const auctionFact = {
             "type": "function"
         }
     ],
-    "address": '0x8e3C547c644dC7483b633B5eC7306C6e9d256F9C'
+    "address": '0x104Ed9e48993f75f9Ae3FF05A779BDF03D372a05'
 }
 
 export default auctionFact
