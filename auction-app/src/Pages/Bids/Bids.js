@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 // import { Link, useNavigate } from 'react-router-dom';
 
-import '../Home/Home.css';
-import Header from "./../Header/Header";
-import Card from "../Card/Card";
+import '../../Pages/Home/Home.css';
+import Header from "../../Components/Header/Header";
+import Card from "../../Components/Card/Card";
 import auction from "../../Services/keys/auctionKeys";
 
 export default function Home({signer, setSigner, auctFactory, setAuctFactory}) {

@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
 
-import Header from "../Header/Header";
+import Header from "../../Components/Header/Header";
 import auction from "../../Services/keys/auctionKeys";
 import "./Product.css";
 import "../Home/Home.css";
