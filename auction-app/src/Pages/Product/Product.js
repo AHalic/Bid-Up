@@ -15,6 +15,7 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
     const [image, setImage] = useState("")
     const [deadline, setDeadline] = useState("")
     const [close, setClose] = useState(false)
+    const [payed, setPayed] = useState(false)
 
     const navigate = useNavigate()
 
@@ -38,8 +39,10 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
             const endDate = new Date(Number(auctEndDate))
             
             const today = new Date()
-
             setDeadline(endDate - today)
+
+            const pay = await auctionContract.payed()
+            setPayed(pay)
         }
         getData()
 
@@ -102,8 +105,8 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
                         <div className="pricingContainer">
                             <p className="productPrice">{`Current bid: eth $${price}`}</p>
                             <div className="bidInputContainer">
-                                <input className="bidInput" type="number" placeholder="Enter bid"/>
-                                <button className="bidButton" type="button" onClick={handleClickSend}>Send</button>
+                                <input className="bidInput" type="number" placeholder="Enter bid" disabled={payed}/>
+                                <button className={`bidButton ${payed ? 'bidButtonDeact' : null}`}  type="button" onClick={handleClickSend} disabled={payed}>Send</button>
                             </div>
                         </div>
                         {close ? 
