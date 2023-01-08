@@ -89,7 +89,7 @@ export default function Header({boolSearch, setSearchQuery, setSigner, auctFacto
                                     My Bids
                                 </div>
                             </Link>
-                            <Link to='/bids' style={{ textDecoration: 'none' }}>
+                            <Link to='/auctions' style={{ textDecoration: 'none' }}>
                                 <div className="item">
                                     My Auctions
                                 </div>

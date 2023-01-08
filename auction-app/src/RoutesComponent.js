@@ -47,6 +47,7 @@ const RoutesComponent = () => {
     }, [])
 
     return (
+        // auctions, isBid, title1, title2
         <BrowserRouter>
             {/* Para ter diversas rotas, é preciso usar a tag Routes */}
             <Routes>
@@ -55,10 +56,14 @@ const RoutesComponent = () => {
                     auctFactory={auctFactory} setAuctFactory={setAuctFactory}
                     auctions={auctions} isHome={true} title={'OPEN AUCTIONS'} />} path="/" />
                 <Route element={<Bids signer={signer} setSigner={setSigner} 
-                    auctFactory={auctFactory} setAuctFactory={setAuctFactory}/>} path="/bids" />
+                    auctFactory={auctFactory} setAuctFactory={setAuctFactory}
+                    auctions={auctions} isBid={true} title1={'WAITING PAYMENT'} title2={'MY BIDS'}/>} path="/bids" />
                 <Route element={<Home signer={signer} setSigner={setSigner}
                     auctFactory={auctFactory} setAuctFactory={setAuctFactory}
                     auctions={history} isHome={false} title={'MY SHOPPING'} />} path="/shopping" />
+                <Route element={<Bids signer={signer} setSigner={setSigner} 
+                    auctFactory={auctFactory} setAuctFactory={setAuctFactory}
+                    auctions={auctions} isBid={false} title1={'MY OPEN AUCTIONS'} title2={'MY OLD AUCTIONS'}/>} path="/auctions" />
                 {auctions ?
                     auctions.map((address) => {
                         return (<Route key={address} element={<Product address={address} signer={signer} setSigner={setSigner}
