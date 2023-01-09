@@ -1,15 +1,73 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-// import { Link, useNavigate } from 'react-router-dom';
+import { style, StyledTextField } from './style';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import '../../Pages/Home/Home.css';
 import Header from "../../Components/Header/Header";
 import Card from "../../Components/Card/Card";
 import auction from "../../Services/keys/auctionKeys";
+import Dropzone from "../../Components/Dropzone/Dropzone";
 
-export default function Home({signer, setSigner, auctFactory, setAuctFactory, auctions, isBid, title1, title2}) {
+
+function ButtonAdd ({setSelectedFile, date, setDate}) {
+    const [open, setOpen] = React.useState(false);
+
+    const handleChange = (newValue) => {
+      setDate(newValue);
+    };
+  
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    return (
+        <div>
+            <Button onClick={handleOpen} style={style.button}>NEW +</Button>
+            <Modal
+                style={style.modal}
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box style={style.box}>
+                    <form className="formModal">
+                        <div className="leftColumn">
+                            <Dropzone onFileUploaded={setSelectedFile}/>
+                            <Button type='submit' style={style.send}>SEND</Button>
+                        </div>
+                        <div className="rightColumn">
+                            <StyledTextField id="outlined-basic" label="Product title" variant="outlined" size='small'/>
+                            {/* <StyledTextField id="outlined-basic" label="Final date" variant="outlined" size='small'/> */}
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DesktopDatePicker
+                                    label="Deadline"
+                                    inputFormat="MM/DD/YYYY"
+                                    value={date}
+                                    onChange={handleChange}
+                                    renderInput={(params) => <StyledTextField {...params} />}
+                                    />
+                            </LocalizationProvider>
+                            <StyledTextField id="outlined-basic" label="Initial bid" variant="outlined" size='small' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}/>
+                        </div>
+                    </form>
+                </Box>
+            </Modal>
+        </div>
+    )
+} 
+
+export default function Bids({signer, setSigner, auctFactory, setAuctFactory, auctions, isBid, title1, title2}) {
     const [openAuct, setOpenAuct] = useState("")
     const [closeAuct, setCloseAuct] = useState("")
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [date, setDate] = React.useState(Date());
 
     useEffect(() => {
         // Get array of auctions    
@@ -86,11 +144,14 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory, au
                 <div className="homeContent">
                     {closeAuct && closeAuct.length > 0 ? 
                         <div className="innerContent">
-                            <p className="titleHome">{title1}</p> 
+                            <div className="titleBtn">
+                                <p className="titleHome">{title1}</p> 
+                                <ButtonAdd setSelectedFile={setSelectedFile} date={date} setDate={setDate} />
+                            </div>
                             <div className="cardsContainer">
                                 {
                                     closeAuct.map(auct => (
-                                        <Card key={auct} auctionAddress={auct} signer={signer} isMyBid={true}/>
+                                        <Card key={auct} auctionAddress={auct} signer={signer} isMyBid={isBid}/>
                                     )) 
                                 }
                             </div>
@@ -98,7 +159,14 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory, au
                     : null}
                     {openAuct && openAuct.length > 0 ?
                         <div className="innerContent">
-                            <p className="titleHome">{title2}</p>
+                            {closeAuct.length === 0 ? 
+                                <div className="titleBtn">
+                                    <p className="titleHome">{title2}</p> 
+                                    <ButtonAdd />
+                                </div>
+                            :
+                                <p className="titleHome">{title2}</p>
+                            }
 
                             <div className="cardsContainer">
                                 {
@@ -110,10 +178,13 @@ export default function Home({signer, setSigner, auctFactory, setAuctFactory, au
                         </div>
                     : null}
                     {closeAuct && openAuct && openAuct.length === 0 && closeAuct.length === 0 ?
+                        <div className="titleBtn">
                             <p className="titleHome">{isBid ? 'You haven\'t bid yet' : 'You have no auctions yet'}</p>
+                            <ButtonAdd />
+                        </div>
                     : null}
                     {openAuct === false || closeAuct === false ? 
-                        <p className="titleHome">Login to start!</p>
+                            <p className="titleHome">Login to start!</p>
                     : null}
                     
                 </div>
