@@ -16,12 +16,15 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
     const [deadline, setDeadline] = useState("")
     const [close, setClose] = useState(false)
     const [payed, setPayed] = useState(false)
+    const [owner, setOwner] = useState("")
+    const [auctContract, setAuctContract] = useState("")
 
     const navigate = useNavigate()
 
     useEffect(() => {
         const getData = async () => {
             const auctionContract = new ethers.Contract(address, auction.abi, signer)
+            setAuctContract(auctionContract)
 
             const auctName = await auctionContract.productName()
             setName(auctName)
@@ -43,6 +46,9 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
 
             const pay = await auctionContract.payed()
             setPayed(pay)
+
+            const seller = await auctionContract.seller()
+            setOwner(seller)
         }
         getData()
 
@@ -86,14 +92,51 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
         })
     }
 
+    function handleClickIcon() {
+        const today = (new Date()).getTime()
+        const auctionContract = new ethers.Contract(address, auction.abi, signer)
+
+        Promise.all([
+            auctionContract.closeAuction(String(today))
+        ]).then(() => {
+            swal({
+                title: 'Your auction will be closed soon',
+                icon: 'info',
+                button: false,
+                closeOnClickOutside: false,
+            })
+            auctContract.on("AuctionClosed", (highestBid, highestBidder) => {
+                swal({
+                    title: `Auction closed, the highest bidder will be notificated to pay ${highestBid} wei`,
+                    icon: 'success',
+                }).then(() => {
+                    window.location.reload(true);
+                })
+            })
+        }).catch((err) => {
+            console.log(err);
+            swal({
+                title: `Something went wrong, please try again ${err?.error?.message}`,
+                icon: 'error',
+            })
+        })
+    }
+
     return (
         <div className="homeOuter">
             <Header boolSearch={false} setSigner={setSigner} auctFactory={auctFactory} 
                 setAuctFactory={setAuctFactory}/>
 
             <div className="homeContent">
-                <div className="arrowContainer">
+                <div className="topContainer">
                     <HiArrowNarrowLeft className="backArrow" size={28} onClick={handleClickBack}/>
+                    {owner === signer._address ?
+                        <div className="closeProduct">
+                            <button type="button" className="closeButton" onClick={handleClickIcon} disabled={owner !== signer._address}>CLOSE</button>
+                        </div>
+                    :
+                        null
+                    }
                 </div>
 
                 <div className="product">
@@ -103,9 +146,9 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
                     <div className="productInfo">
                         <p className="productTitle">{name}</p>
                         <div className="pricingContainer">
-                            <p className="productPrice">{`Current bid: eth $${price}`}</p>
+                            <p className="productPrice">{`Current bid: wei $${price}`}</p>
                             <div className="bidInputContainer">
-                                <input className="bidInput" type="number" placeholder="Enter bid" disabled={payed}/>
+                                <input className="bidInput" type="number" placeholder="Enter bid (in wei)" disabled={payed}/>
                                 <button className={`bidButton ${payed ? 'bidButtonDeact' : null}`}  type="button" onClick={handleClickSend} disabled={payed}>Send</button>
                             </div>
                         </div>
