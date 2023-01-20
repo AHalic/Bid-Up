@@ -18,7 +18,8 @@ import Card from "../../Components/Card/Card";
 import auction from "../../Services/keys/auctionKeys";
 import Dropzone from "../../Components/Dropzone/Dropzone";
 
-const IMAGE_API_KEY="fce1701c294db35869bacc3eae6cd82f";
+import { supabase } from "../../Services/supabaseClient";
+
 
 function ButtonAdd ({signer, auctFactory}) {
     const [open, setOpen] = React.useState(false);
@@ -44,23 +45,24 @@ function ButtonAdd ({signer, auctFactory}) {
         const today = (new Date()).getTime()
         const dateEnd = (new Date(deadline)).getTime()
 
-        const reader = new FileReader();
-
-        reader.onload = async () => {
-            await axios.post(
-                `https://api.imgbb.com/1/upload?key=${IMAGE_API_KEY}&image=${reader.result}`)
-                .then((res) => console.log(res)) // Handling success
-                .catch((err) => console.log(err)); // Handling error
+        const { data, error } = await supabase
+            .storage
+            .from('avatars')
+            .upload('images/avatar1.png', selectedFile, {
+                cacheControl: '3600',
+                upsert: false
+            })
+        
+        console.log(data.path);
+        
+        if (error) {
+          console.log(error);
         }
-      
-        reader.readAsBinaryString(selectedFile);
 
-
-        console.log(selectedFile);
-        const url = URL.createObjectURL(selectedFile)
+        const url = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/avatars/${data.path}`
 
         Promise.all([
-            auctFactory.createAuction(signer._address, String(initialBid), title, today, dateEnd, String(url))
+            auctFactory.createAuction(signer._address, String(initialBid), title, today, dateEnd, url)
         ]).then(() => {
             swal({
                 title: 'Your auction is in process, please wait',
