@@ -83,9 +83,9 @@ contract Auction is ERC20{
     // Define a function to close the auction and finalize the results
     function closeAuction(uint dateNow) public closeAutorize(dateNow) {
         // Trigger the AuctionClosed event
-        emit AuctionClosed(highestBid, highestBidder);
         closeDate = dateNow;
         close = true;
+        emit AuctionClosed(highestBid, highestBidder);
     }
 
     function pay() payable external payAutorize {
