@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { style, StyledTextField } from './style';
-import axios from "axios";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
+
+import CryptoJS from 'crypto-js';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -45,48 +46,58 @@ function ButtonAdd ({signer, auctFactory}) {
         const today = (new Date()).getTime()
         const dateEnd = (new Date(deadline)).getTime()
 
-        const { data, error } = await supabase
-            .storage
-            .from('avatars')
-            .upload('images/avatar1.png', selectedFile, {
-                cacheControl: '3600',
-                upsert: false
-            })
+        const reader = new FileReader();
         
-        console.log(data.path);
+
+        reader.onload = async (event) => {
+           const dataFile = event.target.result;
+           const encrypted = CryptoJS.SHA256( dataFile );
+           
+           const { data, error } = await supabase
+               .storage
+               .from('avatars')
+               .upload(`images/${encrypted}`, selectedFile, {
+                   cacheControl: '3600',
+                   upsert: false
+               })
+           
+           
+           if (error) {
+             console.log(error);
+           }
+   
+           const url = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/avatars/${data.path}`
+   
+           Promise.all([
+               auctFactory.createAuction(signer._address, String(initialBid), title, today, dateEnd, url)
+           ]).then(() => {
+               swal({
+                   title: 'Your auction is in process, please wait',
+                   icon: 'info',
+                   button: false,
+                   closeOnClickOutside: false,
+               })
+               auctFactory.on("AuctionCreated", (from, auction, name, createdAt) => {
+                   swal({
+                       title: `Your auction is created! ${name} is ready to receive bids`,
+                       icon: 'success',
+                   }).then(() => {
+                       handleClose()
+                       navigate('/auctions')
+                   })
+               })
+           }).catch((error) => {
+               console.log('Something went wrong')
+               console.log(error?.error?.message)
+               swal({
+                   title: `Something went wrong: ${error?.error?.message}}`,
+                   icon: 'error',
+               })
+           })
+        };
+        reader.readAsBinaryString(selectedFile);
+    
         
-        if (error) {
-          console.log(error);
-        }
-
-        const url = `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/avatars/${data.path}`
-
-        Promise.all([
-            auctFactory.createAuction(signer._address, String(initialBid), title, today, dateEnd, url)
-        ]).then(() => {
-            swal({
-                title: 'Your auction is in process, please wait',
-                icon: 'info',
-                button: false,
-                closeOnClickOutside: false,
-            })
-            auctFactory.on("AuctionCreated", (from, auction, name, createdAt) => {
-                swal({
-                    title: `Your auction is created! ${name} is ready to receive bids`,
-                    icon: 'success',
-                }).then(() => {
-                    handleClose()
-                    navigate('/auctions')
-                })
-            })
-        }).catch((error) => {
-            console.log('Something went wrong')
-            console.log(error?.error?.message)
-            swal({
-                title: `Something went wrong: ${error?.error?.message}}`,
-                icon: 'error',
-            })
-        })
 
     }
 
