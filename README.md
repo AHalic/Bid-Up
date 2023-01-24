@@ -6,6 +6,9 @@ The platform consists of a website where you can create your own Auctions, bid t
 One can only pay for a product if he was the winner of the auction, and if it's already closed.
 The owner can only close the auction when the deadline is reached, then, once closed, the auction will not receive any further bids.
 
+## Blockchain
+A contract factory is used to create a contract for each one of the auctions, these that keep the product's data. Events happen on three occasions: when a bid is confirmed, when the auction is closed and when the buyer pays for the product.
+
 ## Instructions
 The website is deployed and can be accessed through this [link](https://auction-app-psi.vercel.app/) or it can run locally by cloning the repository and running the following commands on the following commands in the console:
 
