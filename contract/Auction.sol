@@ -65,6 +65,7 @@ contract Auction is ERC20{
 
     modifier closeAutorize(uint dateNow) {
         // Check that the caller is the seller
+        require(!close, "This auction has already been closed");
         require(msg.sender == seller, "Only the owner can close this auction");
         require(dateNow >= endTime, "The auction can only be closed on the deadline");
         _;
