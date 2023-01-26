@@ -130,7 +130,7 @@ export default function Product({address, setSigner, signer, auctFactory, setAuc
             <div className="homeContent">
                 <div className="topContainer">
                     <HiArrowNarrowLeft className="backArrow" size={28} onClick={handleClickBack}/>
-                    {owner === signer._address ?
+                    {owner === signer._address  && !close ?
                         <div className="closeProduct">
                             <button type="button" className="closeButton" onClick={handleClickIcon} disabled={owner !== signer._address}>CLOSE</button>
                         </div>
