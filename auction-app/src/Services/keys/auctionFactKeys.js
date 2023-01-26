@@ -121,7 +121,7 @@ const auctionFact = {
             "type": "function"
         }
     ],
-    "address": '0x104Ed9e48993f75f9Ae3FF05A779BDF03D372a05'
+    "address": '0x670c457e6CF2923517889C529b00380230bb01eB'
 }
 
 export default auctionFact

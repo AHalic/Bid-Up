@@ -588,7 +588,7 @@ const auction = {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-],
+    ],
 }
 
 export default auction
