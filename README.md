@@ -18,6 +18,8 @@ npm start
 ```
 This way, you can access the application at [localhost:3000](https://localhost:3000).
 
+To log in, you must have MetaMask's plugin installed in your browser.
+
 
 ## Tools
 - Front-end: JS | React.js | Material-UI
